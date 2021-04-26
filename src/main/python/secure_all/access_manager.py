@@ -29,8 +29,8 @@ class AccessManager:
     @staticmethod
     def check_dni(dni):
         """validating the dni syntax"""
-        r = r'^[0-9]{8}[A-Z]{1}$'
-        if re.fullmatch(r, dni):
+        regex_dni = r'^[0-9]{8}[A-Z]{1}$'
+        if re.fullmatch(regex_dni, dni):
             return True
         raise AccessManagementException("DNI is not valid")
 
