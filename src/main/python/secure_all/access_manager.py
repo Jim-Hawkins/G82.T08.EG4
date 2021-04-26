@@ -22,8 +22,8 @@ class AccessManager:
              "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
              "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
         nums = int(dni[0:8])
-        r = str(nums % 23)
-        return dni[8] == chars[r]
+        index_letra = str(nums % 23)
+        return dni[8] == chars[index_letra]
 # Cambiada variable d de método validate_dni
 
     @staticmethod
