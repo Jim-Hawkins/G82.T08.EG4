@@ -163,9 +163,9 @@ class AccessManager:
         key_file = self.read_key_file(road_to_storeKeys)
         justnow = datetime.utcnow()
         justnow_timestamp = datetime.timestamp(justnow)
-        for k in key_file :
-            if k["_AccessKey__key"] == key \
-                    and (k["_AccessKey__expiration_date"] > justnow_timestamp
-                         or k["_AccessKey__expiration_date"] == 0):
+        for campo in key_file :
+            if campo["_AccessKey__key"] == key \
+                    and (campo["_AccessKey__expiration_date"] > justnow_timestamp
+                         or campo["_AccessKey__expiration_date"] == 0):
                 return True
         raise AccessManagementException("key is not found or is expired")
