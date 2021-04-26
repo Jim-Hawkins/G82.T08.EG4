@@ -138,13 +138,13 @@ class AccessManager:
         if user_info is None:
             raise AccessManagementException("DNI is not found in the store")
 
-        # generate the acces code to check if it is correct
-        n = AccessRequest(user_info['_AccessRequest__id_document'],
+        # generate the access code to check if it is correct
+        user_request = AccessRequest(user_info['_AccessRequest__id_document'],
                           user_info['_AccessRequest__name'],
                           user_info['_AccessRequest__visitor_type'],
                           user_info['_AccessRequest__email_address'],
                           user_info['_AccessRequest__validity'])
-        ac = n.access_code
+        ac = user_request.access_code
         if ac != req["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         # if everything is ok , generate the key
