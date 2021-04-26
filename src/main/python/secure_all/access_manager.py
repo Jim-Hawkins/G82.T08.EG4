@@ -44,10 +44,10 @@ class AccessManager:
         raise AccessManagementException("days invalid")
 
     @staticmethod
-    def check_ac( a ):
+    def check_ac(access_code):
         """Validating the access code syntax"""
         regex = '[0-9a-f]{32}'
-        if re.fullmatch(regex, a):
+        if re.fullmatch(regex, access_code):
             return True
         raise AccessManagementException("access code invalid")
 
