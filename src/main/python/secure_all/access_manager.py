@@ -85,9 +85,9 @@ class AccessManager:
             raise AccessManagementException("Wrong file or file path") from ex
         except json.JSONDecodeError as ex:
             raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
-        for k in list_data:
-            if k["_AccessRequest__id_document"] == credential:
-                return k
+        for datito in list_data:
+            if datito["_AccessRequest__id_document"] == credential:
+                return datito
         return None
 
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
