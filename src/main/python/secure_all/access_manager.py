@@ -144,8 +144,8 @@ class AccessManager:
                           user_info['_AccessRequest__visitor_type'],
                           user_info['_AccessRequest__email_address'],
                           user_info['_AccessRequest__validity'])
-        ac = user_request.access_code
-        if ac != req["AccessCode"]:
+        user_access_code = user_request.access_code
+        if user_access_code != req["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         # if everything is ok , generate the key
         my_key= AccessKey(req["DNI"], req["AccessCode"],
