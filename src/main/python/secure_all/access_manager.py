@@ -93,9 +93,7 @@ class AccessManager:
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
 
-        regex_correo = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-        if not re.fullmatch(regex_correo, email_address):
-            raise AccessManagementException("Email invalid")
+        self.check_correo(email_address)
 
         self.check_dni(id_card)
         regex_tipin = r'(Resident|Guest)'
@@ -115,6 +113,11 @@ class AccessManager:
         else:
             raise AccessManagementException("DNI is not valid")
 
+    def check_correo(self, email_address):
+        regex_correo = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_correo, email_address):
+            raise AccessManagementException("Email invalid")
+
     def get_access_key(self, keyfile):
         req = self.read_key_file(keyfile)
         #check if all labels are correct
@@ -123,11 +126,9 @@ class AccessManager:
         self.check_dni(req["DNI"])
         self.check_ac(req[ "AccessCode" ])
         num_emails = 0
-        for m in req["NotificationMail"]:
+        for emailsito in req["NotificationMail"]:
             num_emails = num_emails + 1
-            r = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-            if not re.fullmatch(r, m):
-                raise AccessManagementException("Email invalid")
+            self.check_correo(emailsito)
         if num_emails < 1 or num_emails > 5:
             raise AccessManagementException("JSON Decode Error - Email list invalid")
         if not self.validate_dni(req["DNI"]):
