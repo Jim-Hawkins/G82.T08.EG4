@@ -77,9 +77,9 @@ class AccessManager:
     @staticmethod
     def find_credentials(credential):
         """ return the access request related to a given dni"""
-        f = JSON_FILES_PATH + "storeRequest.json"
+        caminito = JSON_FILES_PATH + "storeRequest.json"
         try:
-            with open(f, "r", encoding="utf-8", newline="") as file:
+            with open(caminito, "r", encoding="utf-8", newline="") as file:
                 list_data = json.load(file)
         except FileNotFoundError as ex:
             raise AccessManagementException("Wrong file or file path") from ex
