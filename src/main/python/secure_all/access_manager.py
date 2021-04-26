@@ -75,7 +75,7 @@ class AccessManager:
         return data
 
     @staticmethod
-    def find_credentials( c ):
+    def find_credentials(credential):
         """ return the access request related to a given dni"""
         f = JSON_FILES_PATH + "storeRequest.json"
         try:
@@ -86,7 +86,7 @@ class AccessManager:
         except json.JSONDecodeError as ex:
             raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
         for k in list_data:
-            if k["_AccessRequest__id_document"] == c:
+            if k["_AccessRequest__id_document"] == credential:
                 return k
         return None
 
