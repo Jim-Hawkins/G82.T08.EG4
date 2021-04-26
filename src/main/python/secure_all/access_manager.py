@@ -35,7 +35,7 @@ class AccessManager:
         raise AccessManagementException("DNI is not valid")
 
     @staticmethod
-    def val(days, tipo):
+    def validate_days_and_type(days, tipo):
         """validating the validity days"""
         if not isinstance(days, int):
             raise AccessManagementException("days invalid")
@@ -52,12 +52,12 @@ class AccessManager:
         raise AccessManagementException("access code invalid")
 
     @staticmethod
-    def check_labs( k ):
+    def check_labs(jsonsito):
         """checking the labels of the input json file"""
         try:
-            k[ "AccessCode" ]
-            k[ "DNI" ]
-            k[ "NotificationMail" ]
+            foovarsita = jsonsito["AccessCode"]
+            foovarsita = jsonsito["DNI"]
+            foovarsita = jsonsito["NotificationMail"]
         except KeyError as ex:
             raise AccessManagementException("JSON Decode Error - Wrong label") from ex
         return True
@@ -101,7 +101,7 @@ class AccessManager:
         r = r'(Resident|Guest)'
         if not re.fullmatch(r, access_type):
             raise AccessManagementException("type of visitor invalid")
-        self.val(days, access_type)
+        self.validate_days_and_type(days, access_type)
 
         r = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
         if not re.fullmatch(r, name_surname):
