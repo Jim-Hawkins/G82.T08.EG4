@@ -63,10 +63,10 @@ class AccessManager:
         return True
 
     @staticmethod
-    def read_key_file( f ):
+    def read_key_file(infile):
         """read the list of stored elements"""
         try:
-            with open(f, "r", encoding="utf-8", newline="") as file:
+            with open(infile, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
         except FileNotFoundError as ex:
             raise AccessManagementException("Wrong file or file path") from ex
