@@ -156,11 +156,11 @@ class AccessManager:
 
     def open_door(self, key):
         #check if key is complain with the  correct format
-        r = r'[0-9a-f]{64}'
-        if not re.fullmatch(r, key):
+        regex_key = r'[0-9a-f]{64}'
+        if not re.fullmatch(regex_key, key):
             raise AccessManagementException("key invalid")
-        f = JSON_FILES_PATH + "storeKeys.json"
-        l = self.read_key_file(f)
+        road_to_storeKeys = JSON_FILES_PATH + "storeKeys.json"
+        l = self.read_key_file(road_to_storeKeys)
         justnow = datetime.utcnow()
         justnow_timestamp = datetime.timestamp(justnow)
         for k in l :
