@@ -21,8 +21,8 @@ class AccessManager:
              "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
              "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
              "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
-        v = int(dni[0:8])
-        r = str(v % 23)
+        nums = int(dni[0:8])
+        r = str(nums % 23)
         return dni[8] == chars[r]
 # Cambiada variable d de método validate_dni
 
