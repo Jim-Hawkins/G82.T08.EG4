@@ -160,10 +160,10 @@ class AccessManager:
         if not re.fullmatch(regex_key, key):
             raise AccessManagementException("key invalid")
         road_to_storeKeys = JSON_FILES_PATH + "storeKeys.json"
-        l = self.read_key_file(road_to_storeKeys)
+        key_file = self.read_key_file(road_to_storeKeys)
         justnow = datetime.utcnow()
         justnow_timestamp = datetime.timestamp(justnow)
-        for k in l :
+        for k in key_file :
             if k["_AccessKey__key"] == key \
                     and (k["_AccessKey__expiration_date"] > justnow_timestamp
                          or k["_AccessKey__expiration_date"] == 0):
