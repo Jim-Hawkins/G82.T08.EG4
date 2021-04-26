@@ -133,23 +133,23 @@ class AccessManager:
             raise AccessManagementException("JSON Decode Error - Email list invalid")
         if not self.validate_dni(req["DNI"]):
             raise AccessManagementException("DNI is not valid")
-        # check if this dni is stored, and return in k all the info
-        k = self.find_credentials(req["DNI"])
-        if k is None:
+        # check if this dni is stored, and return in user_info all the info
+        user_info = self.find_credentials(req["DNI"])
+        if user_info is None:
             raise AccessManagementException("DNI is not found in the store")
 
         # generate the acces code to check if it is correct
-        n = AccessRequest(k['_AccessRequest__id_document'],
-                          k['_AccessRequest__name'],
-                          k['_AccessRequest__visitor_type'],
-                          k['_AccessRequest__email_address'],
-                          k['_AccessRequest__validity'])
+        n = AccessRequest(user_info['_AccessRequest__id_document'],
+                          user_info['_AccessRequest__name'],
+                          user_info['_AccessRequest__visitor_type'],
+                          user_info['_AccessRequest__email_address'],
+                          user_info['_AccessRequest__validity'])
         ac = n.access_code
         if ac != req["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         # if everything is ok , generate the key
         my_key= AccessKey(req["DNI"], req["AccessCode"],
-                                     req["NotificationMail"],k["_AccessRequest__validity"])
+                                     req["NotificationMail"],user_info["_AccessRequest__validity"])
         # store the key generated.
         my_key.store_keys()
         return my_key.key
