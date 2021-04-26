@@ -35,11 +35,11 @@ class AccessManager:
         raise AccessManagementException("DNI is not valid")
 
     @staticmethod
-    def val( d, t ):
+    def val(days, t):
         """validating the validity days"""
-        if not isinstance(d, int):
+        if not isinstance(days, int):
             raise AccessManagementException("days invalid")
-        if (t == "Resident" and d == 0) or (t == "Guest" and d >= 2 and d <= 15):
+        if (t == "Resident" and days == 0) or (t == "Guest" and days >= 2 and days <= 15):
             return True
         raise AccessManagementException("days invalid")
 
