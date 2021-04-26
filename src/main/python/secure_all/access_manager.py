@@ -27,10 +27,10 @@ class AccessManager:
 # Cambiada variable d de método validate_dni
 
     @staticmethod
-    def check_dni( d ):
+    def check_dni(dni):
         """validating the dni syntax"""
         r = r'^[0-9]{8}[A-Z]{1}$'
-        if re.fullmatch(r, d):
+        if re.fullmatch(r, dni):
             return True
         raise AccessManagementException("DNI is not valid")
 
