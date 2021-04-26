@@ -93,18 +93,19 @@ class AccessManager:
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
 
-        r = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-        if not re.fullmatch(r, email_address):
+        regex_correo = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_correo, email_address):
             raise AccessManagementException("Email invalid")
 
         self.check_dni(id_card)
-        r = r'(Resident|Guest)'
-        if not re.fullmatch(r, access_type):
+        regex_tipin = r'(Resident|Guest)'
+        if not re.fullmatch(regex_tipin, access_type):
             raise AccessManagementException("type of visitor invalid")
         self.validate_days_and_type(days, access_type)
 
-        r = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
-        if not re.fullmatch(r, name_surname):
+        # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
+        regex_nombre = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
+        if not re.fullmatch(regex_nombre, name_surname):
             raise AccessManagementException("Invalid full name")
 
         if self.validate_dni(id_card):
