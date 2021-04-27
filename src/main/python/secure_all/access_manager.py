@@ -17,13 +17,13 @@ class AccessManager:
     @staticmethod
     def validate_dni(dni):
         """RETURN TRUE IF THE DNI IS RIGHT, OR FALSE IN OTHER CASE"""
-        chars = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
+        valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
              "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
              "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
              "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
-        nums = int(dni[0:8])
-        index_letra = str(nums % 23)
-        return dni[8] == chars[index_letra]
+        dni_number = int(dni[0:8])
+        index_letra = str(dni_number % 23)
+        return dni[8] == valid_chars_dni[index_letra]
 # Cambiada variable d de método validate_dni
 
     @staticmethod
@@ -35,31 +35,31 @@ class AccessManager:
         raise AccessManagementException("DNI is not valid")
 
     @staticmethod
-    def validate_days_and_type(days, tipo):
+    def validate_days_and_type(days, type):
         """validating the validity days"""
         if not isinstance(days, int):
             raise AccessManagementException("days invalid")
-        if (tipo == "Resident" and days == 0) or (tipo == "Guest" and days >= 2 and days <= 15):
+        if (type == "Resident" and days == 0) or (type == "Guest" and days >= 2 and days <= 15):
             return True
         raise AccessManagementException("days invalid")
 
     @staticmethod
-    def check_ac(access_code):
+    def check_access_code(access_code):
         """Validating the access code syntax"""
-        regex = '[0-9a-f]{32}'
-        if re.fullmatch(regex, access_code):
+        regex_access_code = '[0-9a-f]{32}'
+        if re.fullmatch(regex_access_code, access_code):
             return True
         raise AccessManagementException("access code invalid")
 
     @staticmethod
-    def check_labs(jsonsito):
+    def check_input_json_labels(in_json):
         """checking the labels of the input json file"""
         try:
-            foovarsita = jsonsito["AccessCode"]
-            foovarsita = jsonsito["DNI"]
-            foovarsita = jsonsito["NotificationMail"]
-        except KeyError as ex:
-            raise AccessManagementException("JSON Decode Error - Wrong label") from ex
+            key_error_detector = in_json["AccessCode"]
+            key_error_detector = in_json["DNI"]
+            key_error_detector = in_json["NotificationMail"]
+        except KeyError as key_error_exception:
+            raise AccessManagementException("JSON Decode Error - Wrong label") from key_error_exception
         return True
 
     @staticmethod
@@ -121,10 +121,10 @@ class AccessManager:
     def get_access_key(self, keyfile):
         req = self.read_key_file(keyfile)
         #check if all labels are correct
-        self.check_labs(req)
+        self.check_input_json_labels(req)
         # check if the values are correct
         self.check_dni(req["DNI"])
-        self.check_ac(req[ "AccessCode" ])
+        self.check_access_code(req[ "AccessCode" ])
         num_emails = 0
         for emailsito in req["NotificationMail"]:
             num_emails = num_emails + 1
