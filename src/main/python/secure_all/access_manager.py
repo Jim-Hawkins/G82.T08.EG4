@@ -68,42 +68,42 @@ class AccessManager:
         try:
             with open(infile, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccessManagementException("Wrong file or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as file_not_found_exception:
+            raise AccessManagementException("Wrong file or file path") from file_not_found_exception
+        except json.JSONDecodeError as json_decode_exception:
+            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from json_decode_exception
         return data
 
     @staticmethod
     def find_credentials(credential):
         """ return the access request related to a given dni"""
-        caminito = JSON_FILES_PATH + "storeRequest.json"
+        path_to_request = JSON_FILES_PATH + "storeRequest.json"
         try:
-            with open(caminito, "r", encoding="utf-8", newline="") as file:
+            with open(path_to_request, "r", encoding="utf-8", newline="") as file:
                 list_data = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccessManagementException("Wrong file or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
-        for datito in list_data:
-            if datito["_AccessRequest__id_document"] == credential:
-                return datito
+        except FileNotFoundError as file_not_found_exception:
+            raise AccessManagementException("Wrong file or file path") from file_not_found_exception
+        except json.JSONDecodeError as json_decode_exception:
+            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from json_decode_exception
+        for element in list_data:
+            if element["_AccessRequest__id_document"] == credential:
+                return element
         return None
 
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
 
-        self.check_correo(email_address)
+        self.check_email_syntax(email_address)
 
         self.check_dni(id_card)
-        regex_tipin = r'(Resident|Guest)'
-        if not re.fullmatch(regex_tipin, access_type):
+        regex_type = r'(Resident|Guest)'
+        if not re.fullmatch(regex_type, access_type):
             raise AccessManagementException("type of visitor invalid")
         self.validate_days_and_type(days, access_type)
 
         # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
-        regex_nombre = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
-        if not re.fullmatch(regex_nombre, name_surname):
+        regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
+        if not re.fullmatch(regex_name, name_surname):
             raise AccessManagementException("Invalid full name")
 
         if self.validate_dni(id_card):
@@ -113,28 +113,28 @@ class AccessManager:
         else:
             raise AccessManagementException("DNI is not valid")
 
-    def check_correo(self, email_address):
-        regex_correo = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-        if not re.fullmatch(regex_correo, email_address):
+    def check_email_syntax(self, email_address):
+        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
 
     def get_access_key(self, keyfile):
-        req = self.read_key_file(keyfile)
+        request = self.read_key_file(keyfile)
         #check if all labels are correct
-        self.check_input_json_labels(req)
+        self.check_input_json_labels(request)
         # check if the values are correct
-        self.check_dni(req["DNI"])
-        self.check_access_code(req[ "AccessCode" ])
+        self.check_dni(request["DNI"])
+        self.check_access_code(request[ "AccessCode" ])
         num_emails = 0
-        for emailsito in req["NotificationMail"]:
+        for email in request["NotificationMail"]:
             num_emails = num_emails + 1
-            self.check_correo(emailsito)
+            self.check_email_syntax(email)
         if num_emails < 1 or num_emails > 5:
             raise AccessManagementException("JSON Decode Error - Email list invalid")
-        if not self.validate_dni(req["DNI"]):
+        if not self.validate_dni(request["DNI"]):
             raise AccessManagementException("DNI is not valid")
         # check if this dni is stored, and return in user_info all the info
-        user_info = self.find_credentials(req["DNI"])
+        user_info = self.find_credentials(request["DNI"])
         if user_info is None:
             raise AccessManagementException("DNI is not found in the store")
 
@@ -145,11 +145,11 @@ class AccessManager:
                           user_info['_AccessRequest__email_address'],
                           user_info['_AccessRequest__validity'])
         user_access_code = user_request.access_code
-        if user_access_code != req["AccessCode"]:
+        if user_access_code != request["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         # if everything is ok , generate the key
-        my_key= AccessKey(req["DNI"], req["AccessCode"],
-                                     req["NotificationMail"],user_info["_AccessRequest__validity"])
+        my_key= AccessKey(request["DNI"], request["AccessCode"],
+                                     request["NotificationMail"],user_info["_AccessRequest__validity"])
         # store the key generated.
         my_key.store_keys()
         return my_key.key

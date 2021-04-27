@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test_get_access_key_tests.TestAccessManager-20210427120212" tests="1" file="test_get_access_key_tests.py" time="0.072" timestamp="2021-04-27T12:02:12" failures="0" errors="0" skipped="0">
+	<testcase classname="test_get_access_key_tests.TestAccessManager" name="test_parametrized_cases_tests" time="0.072" timestamp="2021-04-27T12:02:12"/>
+</testsuite>
