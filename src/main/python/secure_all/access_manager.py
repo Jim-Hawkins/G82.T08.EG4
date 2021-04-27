@@ -35,11 +35,12 @@ class AccessManager:
         raise AccessManagementException("DNI is not valid")
 
     @staticmethod
-    def validate_days_and_type(days, type):
+    def validate_days_and_type(days, user_type):
         """validating the validity days"""
         if not isinstance(days, int):
             raise AccessManagementException("days invalid")
-        if (type == "Resident" and days == 0) or (type == "Guest" and days >= 2 and days <= 15):
+        if (user_type == "Guest" and days in range(2, 16)) or \
+                (user_type == "Resident" and days == 0):
             return True
         raise AccessManagementException("days invalid")
 
@@ -59,8 +60,16 @@ class AccessManager:
             key_error_detector = in_json["DNI"]
             key_error_detector = in_json["NotificationMail"]
         except KeyError as key_error_exception:
-            raise AccessManagementException("JSON Decode Error - Wrong label") from key_error_exception
+            raise AccessManagementException("JSON Decode Error - Wrong label")\
+                from key_error_exception
         return True
+
+    @staticmethod
+    def check_email_syntax(email_address):
+        """ checks the email's syntax"""
+        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_email, email_address):
+            raise AccessManagementException("Email invalid")
 
     @staticmethod
     def read_key_file(infile):
@@ -71,7 +80,8 @@ class AccessManager:
         except FileNotFoundError as file_not_found_exception:
             raise AccessManagementException("Wrong file or file path") from file_not_found_exception
         except json.JSONDecodeError as json_decode_exception:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from json_decode_exception
+            raise AccessManagementException("JSON Decode Error - Wrong JSON Format")\
+                from json_decode_exception
         return data
 
     @staticmethod
@@ -84,7 +94,8 @@ class AccessManager:
         except FileNotFoundError as file_not_found_exception:
             raise AccessManagementException("Wrong file or file path") from file_not_found_exception
         except json.JSONDecodeError as json_decode_exception:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from json_decode_exception
+            raise AccessManagementException("JSON Decode Error - Wrong JSON Format")\
+                from json_decode_exception
         for element in list_data:
             if element["_AccessRequest__id_document"] == credential:
                 return element
@@ -110,15 +121,10 @@ class AccessManager:
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
             my_request.add_credentials()
             return my_request.access_code
-        else:
-            raise AccessManagementException("DNI is not valid")
-
-    def check_email_syntax(self, email_address):
-        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-        if not re.fullmatch(regex_email, email_address):
-            raise AccessManagementException("Email invalid")
+        raise AccessManagementException("DNI is not valid")
 
     def get_access_key(self, keyfile):
+        """ checks the validity of the keyfile request and provides de definite key"""
         request = self.read_key_file(keyfile)
         #check if all labels are correct
         self.check_input_json_labels(request)
@@ -148,19 +154,21 @@ class AccessManager:
         if user_access_code != request["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         # if everything is ok , generate the key
-        my_key= AccessKey(request["DNI"], request["AccessCode"],
-                                     request["NotificationMail"],user_info["_AccessRequest__validity"])
+        my_key= AccessKey(request["DNI"],
+                          request["AccessCode"],
+                          request["NotificationMail"],
+                          user_info["_AccessRequest__validity"])
         # store the key generated.
         my_key.store_keys()
         return my_key.key
 
     def open_door(self, key):
-        #check if key is complain with the  correct format
+        """check if key is complain with the  correct format"""
         regex_key = r'[0-9a-f]{64}'
         if not re.fullmatch(regex_key, key):
             raise AccessManagementException("key invalid")
-        road_to_storeKeys = JSON_FILES_PATH + "storeKeys.json"
-        key_file = self.read_key_file(road_to_storeKeys)
+        path_to_store_keys = JSON_FILES_PATH + "storeKeys.json"
+        key_file = self.read_key_file(path_to_store_keys)
         justnow = datetime.utcnow()
         justnow_timestamp = datetime.timestamp(justnow)
         for campo in key_file :
