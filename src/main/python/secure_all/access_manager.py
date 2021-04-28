@@ -65,13 +65,6 @@ class AccessManager:
         return True
 
     @staticmethod
-    def check_email_syntax(email_address):
-        """ checks the email's syntax"""
-        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
-        if not re.fullmatch(regex_email, email_address):
-            raise AccessManagementException("Email invalid")
-
-    @staticmethod
     def read_key_file(infile):
         """read the list of stored elements"""
         try:
