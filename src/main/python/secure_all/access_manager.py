@@ -134,38 +134,45 @@ class AccessManager:
         #check if all labels are correct
         self.validate_key_labels(request)
         # check if the values are correct
-        self.check_dni_syntax(request["DNI"])
-        self.check_access_code(request[ "AccessCode" ])
-        num_emails = 0
-        for email in request["NotificationMail"]:
-            num_emails = num_emails + 1
-            self.check_email_syntax(email)
-        if num_emails < 1 or num_emails > 5:
-            raise AccessManagementException("JSON Decode Error - Email list invalid")
-        if not self.validate_dni(request["DNI"]):
-            raise AccessManagementException("DNI is not valid")
-        # check if this dni is stored, and return in user_info all the info
-        user_info = self.find_credentials(request["DNI"])
-        if user_info is None:
-            raise AccessManagementException("DNI is not found in the store")
+        self.check_access_code(request["AccessCode"])
 
-        # generate the access code to check if it is correct
-        user_request = AccessRequest(user_info['_AccessRequest__id_document'],
-                          user_info['_AccessRequest__name'],
-                          user_info['_AccessRequest__visitor_type'],
-                          user_info['_AccessRequest__email_address'],
-                          user_info['_AccessRequest__validity'])
-        user_access_code = user_request.access_code
-        if user_access_code != request["AccessCode"]:
-            raise AccessManagementException("access code is not correct for this DNI")
+        self.check_dni_syntax(request["DNI"])
+        self.validate_email_list(request)
+        user_info = self.validate_access_code_for_dni(request)
         # if everything is ok , generate the key
-        my_key= AccessKey(request["DNI"],
+        my_key = AccessKey(request["DNI"],
                           request["AccessCode"],
                           request["NotificationMail"],
                           user_info["_AccessRequest__validity"])
         # store the key generated.
         my_key.store_keys()
         return my_key.key
+
+    def validate_access_code_for_dni(self, request):
+        if not self.validate_dni(request["DNI"]):
+            raise AccessManagementException("DNI is not valid")
+        # check if this dni is stored, and return in user_info all the info
+        user_info = self.find_credentials(request["DNI"])
+        if user_info is None:
+            raise AccessManagementException("DNI is not found in the store")
+        # generate the access code to check if it is correct
+        user_request = AccessRequest(user_info['_AccessRequest__id_document'],
+                                     user_info['_AccessRequest__name'],
+                                     user_info['_AccessRequest__visitor_type'],
+                                     user_info['_AccessRequest__email_address'],
+                                     user_info['_AccessRequest__validity'])
+        user_access_code = user_request.access_code
+        if user_access_code != request["AccessCode"]:
+            raise AccessManagementException("access code is not correct for this DNI")
+        return user_info
+
+    def validate_email_list(self, request):
+        num_emails = 0
+        for email in request["NotificationMail"]:
+            num_emails = num_emails + 1
+            self.check_email_syntax(email)
+        if num_emails < 1 or num_emails > 5:
+            raise AccessManagementException("JSON Decode Error - Email list invalid")
 
     def open_door(self, key):
         """check if key is complain with the  correct format"""
