@@ -106,21 +106,27 @@ class AccessManager:
 
         self.check_email_syntax(email_address)
 
-        regex_type = r'(Resident|Guest)'
-        if not re.fullmatch(regex_type, access_type):
-            raise AccessManagementException("type of visitor invalid")
-        self.validate_days_and_type(days, access_type)
+        self.validate_access_type(access_type, days)
 
-        # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
-        regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
-        if not re.fullmatch(regex_name, name_surname):
-            raise AccessManagementException("Invalid full name")
+        self.validate_name_surname(name_surname)
 
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
             my_request.add_credentials()
             return my_request.access_code
         raise AccessManagementException("DNI is not valid")
+
+    def validate_name_surname(self, name_surname):
+        # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
+        regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
+        if not re.fullmatch(regex_name, name_surname):
+            raise AccessManagementException("Invalid full name")
+
+    def validate_access_type(self, access_type, days):
+        regex_type = r'(Resident|Guest)'
+        if not re.fullmatch(regex_type, access_type):
+            raise AccessManagementException("type of visitor invalid")
+        self.validate_days_and_type(days, access_type)
 
     def get_access_key(self, keyfile):
         """ checks the validity of the keyfile request and provides de definite key"""
