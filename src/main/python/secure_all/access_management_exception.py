@@ -2,7 +2,7 @@
 
 class AccessManagementException(Exception):
     """Personalised exception for Access Management"""
-    def __init__(self, message):
+    def __init__(self, message) -> object:
         self.__message = message
         super().__init__(self.message)
 

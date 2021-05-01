@@ -1,30 +1,59 @@
 """MODULE: access_request. Contains the access request class"""
 import json
 import hashlib
+import re
 from .access_manager_config import JSON_FILES_PATH
 from .access_management_exception import AccessManagementException
 
+
 class AccessRequest:
     """Class representing the access request"""
-    def __init__( self, id_document, full_name, visitor_type, email_address, validity):
+
+    def __init__(self, id_document, full_name, visitor_type, email_address, validity):
         self.__id_document = id_document
         self.__name = full_name
-        self.__visitor_type = visitor_type
-        self.__email_address = email_address
-        self.__validity = validity
-        #justnow = datetime.utcnow()
-        #self.__time_stamp = datetime.timestamp(justnow)
-        #only for testing , fix de time stamp to this value 1614962381.90867 , 5/3/2020 18_40
+        self.__visitor_type = self.validate_access_type(visitor_type, validity)
+        self.__email_address = self.check_email_syntax(email_address)
+        self.__validity = self.validate_days_and_type(validity, visitor_type)
+        # justnow = datetime.utcnow()
+        # self.__time_stamp = datetime.timestamp(justnow)
+        # only for testing , fix de time stamp to this value 1614962381.90867 , 5/3/2020 18_40
         self.__time_stamp = 1614962381.90867
 
     def __str__(self):
         return "AccessRequest:" + json.dumps(self.__dict__)
 
+    @staticmethod
+    def check_email_syntax(email_address):
+        """ checks the email's syntax"""
+        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_email, email_address):
+            raise AccessManagementException("Email invalid")
+        return email_address
+
+    def validate_access_type(self, access_type, days):
+        regex_type = r'(Resident|Guest)'
+        if not re.fullmatch(regex_type, access_type):
+            raise AccessManagementException("type of visitor invalid")
+        self.validate_days_and_type(days, access_type)
+        return access_type
+
+    @staticmethod
+    def validate_days_and_type(days, user_type):
+        """validating the validity days"""
+        if not isinstance(days, int):
+            raise AccessManagementException("days invalid")
+        if (user_type == "Guest" and days in range(2, 16)) or \
+                (user_type == "Resident" and days == 0):
+            return days
+        raise AccessManagementException("days invalid")
+
     @property
-    def name( self ):
+    def name(self):
         """Property representing the name and the surname of
         the person who request access to the building"""
         return self.__name
+
     @name.setter
     def name(self, value):
         """name setter"""
@@ -34,6 +63,7 @@ class AccessRequest:
     def visitor_type(self):
         """Property representing the type of visitor: Resident or Guest"""
         return self.__visitor_type
+
     @visitor_type.setter
     def visitor_type(self, value):
         self.__visitor_type = value
@@ -42,16 +72,18 @@ class AccessRequest:
     def email_address(self):
         """Property representing the requester's email address"""
         return self.__email_address
+
     @email_address.setter
     def email_address(self, value):
         self.__email_address = value
 
     @property
-    def id_document( self ):
+    def id_document(self):
         """Property representing the requester's DNI"""
         return self.__id_document
+
     @id_document.setter
-    def id_document( self, value ):
+    def id_document(self, value):
         self.__id_document = value
 
     @property
@@ -60,7 +92,7 @@ class AccessRequest:
         return self.__time_stamp
 
     @property
-    def access_code (self):
+    def access_code(self):
         """Property for obtaining the access code according the requirements"""
         return hashlib.md5(self.__str__().encode()).hexdigest()
 
@@ -69,7 +101,7 @@ class AccessRequest:
         """Returns the list of AccessRequests from the store"""
         f = JSON_FILES_PATH + "storeRequest.json"
         try:
-            with open(f, "r",encoding="utf-8", newline="") as file:
+            with open(f, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
         except FileNotFoundError as ex:
             raise AccessManagementException("Wrong file or file path") from ex
@@ -81,7 +113,7 @@ class AccessRequest:
         """Save the access requests in hte store"""
         myFile = JSON_FILES_PATH + "storeRequest.json"
         try:
-            #if file is not exist store the first item
+            # if file is not exist store the first item
             with open(myFile, "x", encoding="utf-8", newline="") as file:
                 data = [self.__dict__]
                 json.dump(data, file, indent=2)
@@ -90,7 +122,7 @@ class AccessRequest:
             l = self.read_credentials()
             # check if this DNI is not stored
             for k in l:
-                if k["_AccessRequest__id_document"] == self.id_document :
+                if k["_AccessRequest__id_document"] == self.id_document:
                     raise AccessManagementException("id_document found in storeRequest") from ex
             l.append(self.__dict__)
             with open(myFile, "w", encoding="utf-8", newline="") as file:

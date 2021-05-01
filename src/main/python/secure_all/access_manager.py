@@ -8,6 +8,24 @@ from .access_key import AccessKey
 from .access_request import AccessRequest
 from .access_manager_config import JSON_FILES_PATH
 
+
+def check_dni_letter(dni):
+    valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
+                       "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
+                       "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
+                       "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
+    dni_number = int(dni[0:8])
+    index_letra = str(dni_number % 23)
+    return dni[8] == valid_chars_dni[index_letra]
+
+
+def validate_name_surname(name_surname):
+    # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
+    regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
+    if not re.fullmatch(regex_name, name_surname):
+        raise AccessManagementException("Invalid full name")
+
+
 class AccessManager:
     """Class for providing the methods for managing the access to a building"""
     def __init__(self):
@@ -16,16 +34,7 @@ class AccessManager:
     def validate_dni(self, dni):
         """RETURN TRUE IF THE DNI IS RIGHT, OR FALSE IN OTHER CASE"""
         self.check_dni_syntax(dni)
-        return self.check_dni_letter(dni)
-
-    def check_dni_letter(self, dni):
-        valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
-                           "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
-                           "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
-                           "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
-        dni_number = int(dni[0:8])
-        index_letra = str(dni_number % 23)
-        return dni[8] == valid_chars_dni[index_letra]
+        return check_dni_letter(dni)
 
     @staticmethod
     def check_dni_syntax(dni):
@@ -34,16 +43,6 @@ class AccessManager:
         if re.fullmatch(regex_dni, dni):
             return True
         raise AccessManagementException("DNI is not valid")
-
-    @staticmethod
-    def validate_days_and_type(days, user_type):
-        """validating the validity days"""
-        if not isinstance(days, int):
-            raise AccessManagementException("days invalid")
-        if (user_type == "Guest" and days in range(2, 16)) or \
-                (user_type == "Resident" and days == 0):
-            return True
-        raise AccessManagementException("days invalid")
 
     @staticmethod
     def check_access_code(access_code):
@@ -97,11 +96,7 @@ class AccessManager:
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
 
-        self.check_email_syntax(email_address)
-
-        self.validate_access_type(access_type, days)
-
-        self.validate_name_surname(name_surname)
+        validate_name_surname(name_surname)
 
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
@@ -109,17 +104,12 @@ class AccessManager:
             return my_request.access_code
         raise AccessManagementException("DNI is not valid")
 
-    def validate_name_surname(self, name_surname):
-        # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
-        regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
-        if not re.fullmatch(regex_name, name_surname):
-            raise AccessManagementException("Invalid full name")
-
-    def validate_access_type(self, access_type, days):
-        regex_type = r'(Resident|Guest)'
-        if not re.fullmatch(regex_type, access_type):
-            raise AccessManagementException("type of visitor invalid")
-        self.validate_days_and_type(days, access_type)
+    @staticmethod
+    def check_email_syntax(email_address):
+        """ checks the email's syntax"""
+        regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
+        if not re.fullmatch(regex_email, email_address):
+            raise AccessManagementException("Email invalid")
 
     def get_access_key(self, keyfile):
         """ checks the validity of the keyfile request and provides de definite key"""
