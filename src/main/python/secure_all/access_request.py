@@ -11,7 +11,7 @@ class AccessRequest:
 
     def __init__(self, id_document, full_name, visitor_type, email_address, validity):
         self.__id_document = id_document
-        self.__name = full_name
+        self.__name = self.validate_name_surname(full_name)
         self.__visitor_type = self.validate_access_type(visitor_type, validity)
         self.__email_address = self.check_email_syntax(email_address)
         self.__validity = self.validate_days_and_type(validity, visitor_type)
@@ -30,6 +30,14 @@ class AccessRequest:
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
         return email_address
+
+
+    def validate_name_surname(self, name_surname):
+        # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
+        regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
+        if not re.fullmatch(regex_name, name_surname):
+            raise AccessManagementException("Invalid full name")
+        return name_surname
 
     def validate_access_type(self, access_type, days):
         regex_type = r'(Resident|Guest)'

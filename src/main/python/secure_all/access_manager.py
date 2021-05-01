@@ -18,14 +18,6 @@ def check_dni_letter(dni):
     index_letra = str(dni_number % 23)
     return dni[8] == valid_chars_dni[index_letra]
 
-
-def validate_name_surname(name_surname):
-    # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
-    regex_name = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'
-    if not re.fullmatch(regex_name, name_surname):
-        raise AccessManagementException("Invalid full name")
-
-
 class AccessManager:
     """Class for providing the methods for managing the access to a building"""
     def __init__(self):
@@ -95,8 +87,6 @@ class AccessManager:
 
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
-
-        validate_name_surname(name_surname)
 
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
