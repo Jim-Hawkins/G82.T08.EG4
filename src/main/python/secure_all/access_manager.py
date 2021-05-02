@@ -9,44 +9,41 @@ from .access_request import AccessRequest
 from .access_manager_config import JSON_FILES_PATH
 
 
-def check_dni_letter(dni):
-    valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
-                       "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
-                       "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
-                       "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
-    dni_number = int(dni[0:8])
-    index_letra = str(dni_number % 23)
-    return dni[8] == valid_chars_dni[index_letra]
-
 class AccessManager:
     """Class for providing the methods for managing the access to a building"""
     def __init__(self):
         pass
-
-    def validate_dni(self, dni):
-        """RETURN TRUE IF THE DNI IS RIGHT, OR FALSE IN OTHER CASE"""
-        self.check_dni_syntax(dni)
-        return check_dni_letter(dni)
-
+    ### está en access_key también
     @staticmethod
-    def check_dni_syntax(dni):
-        """validating the dni syntax"""
+    def validate_dni(dni):
+        """RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE"""
         regex_dni = r'^[0-9]{8}[A-Z]{1}$'
-        if re.fullmatch(regex_dni, dni):
-            return True
-        raise AccessManagementException("DNI is not valid")
+        if not re.fullmatch(regex_dni, dni):
+            raise AccessManagementException("DNI is not valid")
+        valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
+                           "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
+                           "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
+                           "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
+        dni_number = int(dni[0:8])
+        index_letra = str(dni_number % 23)
+        return dni[8] == valid_chars_dni[index_letra]
 
+    """ en access_key
     @staticmethod
     def check_access_code(access_code):
-        """Validating the access code syntax"""
+        """#Validating the access code syntax
+    """
         regex_access_code = '[0-9a-f]{32}'
         if re.fullmatch(regex_access_code, access_code):
             return True
         raise AccessManagementException("access code invalid")
+    """
 
+    """ en access_key
     @staticmethod
     def validate_key_labels(label_list):
-        """checking the labels of the input json file"""
+        """#checking the labels of the input json file
+    """
         if not "AccessCode" in label_list.keys():
             raise AccessManagementException("JSON Decode Error - Wrong label")
         if not "DNI" in label_list.keys():
@@ -54,7 +51,9 @@ class AccessManager:
         if not "NotificationMail" in label_list.keys():
             raise AccessManagementException("JSON Decode Error - Wrong label")
         return True
+    """
 
+    ### está en access_key también
     @staticmethod
     def read_key_file(infile):
         """read the list of stored elements"""
@@ -68,9 +67,11 @@ class AccessManager:
                 from json_decode_exception
         return data
 
+    """ en access_key
     @staticmethod
     def find_credentials(credential):
-        """ return the access request related to a given dni"""
+        """# return the access request related to a given dni
+    """
         path_to_request = JSON_FILES_PATH + "storeRequest.json"
         try:
             with open(path_to_request, "r", encoding="utf-8", newline="") as file:
@@ -84,44 +85,51 @@ class AccessManager:
             if element["_AccessRequest__id_document"] == credential:
                 return element
         return None
-
+    """
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
         """ this method give access to the building"""
-
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
             my_request.add_credentials()
             return my_request.access_code
         raise AccessManagementException("DNI is not valid")
-
+    """ en access_key
     @staticmethod
     def check_email_syntax(email_address):
-        """ checks the email's syntax"""
+        """#checks the email's syntax
+    """
         regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
+    """
 
     def get_access_key(self, keyfile):
         """ checks the validity of the keyfile request and provides de definite key"""
-        request = self.read_key_file(keyfile)
+        """request = self.read_key_file(keyfile)
         #check if all labels are correct
         self.validate_key_labels(request)
         # check if the values are correct
         self.check_access_code(request["AccessCode"])
 
-        self.check_dni_syntax(request["DNI"])
+        #self.validate_dni(request["DNI"])#está en validate_access_code_for_dni
         self.validate_email_list(request)
         user_info = self.validate_access_code_for_dni(request)
+        """
         # if everything is ok , generate the key
+        """
         my_key = AccessKey(request["DNI"],
                           request["AccessCode"],
                           request["NotificationMail"],
                           user_info["_AccessRequest__validity"])
+        """
+        my_key = AccessKey(keyfile)
         # store the key generated.
         my_key.store_keys()
         return my_key.key
-
+    """ en access_key
     def validate_access_code_for_dni(self, request):
+        """ #validates access code for dni
+    """
         if not self.validate_dni(request["DNI"]):
             raise AccessManagementException("DNI is not valid")
         # check if this dni is stored, and return in user_info all the info
@@ -138,14 +146,18 @@ class AccessManager:
         if user_access_code != request["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
         return user_info
-
+    """
+    """ en access_key
     def validate_email_list(self, request):
+        """#validates email list
+    """
         num_emails = 0
         for email in request["NotificationMail"]:
             num_emails = num_emails + 1
             self.check_email_syntax(email)
         if num_emails < 1 or num_emails > 5:
             raise AccessManagementException("JSON Decode Error - Email list invalid")
+    """
 
     def open_door(self, key):
         """check if key is complain with the  correct format"""
