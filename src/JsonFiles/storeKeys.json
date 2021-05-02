@@ -24,5 +24,18 @@
     "_AccessKey__issued_at": 1615627129.580297,
     "_AccessKey__expiration_date": 0,
     "_AccessKey__key": "de000a04f3a9b1d15b07e38b166f00f3fb1bf46533f32ac37156faf43e47f722"
+  },
+  {
+    "_AccessKey__alg": "SHA-256",
+    "_AccessKey__type": "DS",
+    "_AccessKey__dni": "87654123L",
+    "_AccessKey__access_code": "a411c58d7a8177abec4a3016d26e3142",
+    "_AccessKey__notification_emails": [
+      "mail1@uc3m.es",
+      "mail2@uc3m.es"
+    ],
+    "_AccessKey__issued_at": 1615627129.580297,
+    "_AccessKey__expiration_date": 1,
+    "_AccessKey__key": "3429fbd2e372c7c49632e96d66a4a07bcf0f6dfe492e07d03a874f21f6012b40"
   }
 ]

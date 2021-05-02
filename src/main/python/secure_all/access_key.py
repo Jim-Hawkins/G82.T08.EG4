@@ -227,18 +227,18 @@ class AccessKey():
 
     def store_keys(self):
         """ srote de keys """
-        myFile = JSON_FILES_PATH + "storeKeys.json"
+        my_file = JSON_FILES_PATH + "storeKeys.json"
         try:
-            with open(myFile, "r", encoding="utf-8", newline="") as file:
+            with open(my_file, "r", encoding="utf-8", newline="") as file:
                 list_keys = json.load(file)
             # append the new key
             list_keys.append(self.__dict__)
             # write all the keys in the file
-            with open(myFile, "w", encoding="utf-8", newline="") as file:
+            with open(my_file, "w", encoding="utf-8", newline="") as file:
                 json.dump(list_keys, file, indent=2)
         except FileNotFoundError as ex:
             # if file is not found, store the first key
-            with open(myFile, "x", encoding="utf-8", newline="") as file:
+            with open(my_file, "x", encoding="utf-8", newline="") as file:
                 data_key = [self.__dict__]
                 json.dump(data_key, file, indent=2)
         except json.JSONDecodeError as ex:
