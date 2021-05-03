@@ -7,6 +7,8 @@ from .access_management_exception import AccessManagementException
 from .data.attribute_full_name import FullName
 from .data.attribute_dni import Dni
 from .data.attribute_email import Email
+from .data.attribute_access_type import AccessType
+from .data.attribute_days import Days
 
 
 class AccessRequest:
@@ -18,11 +20,13 @@ class AccessRequest:
 
         self.__name = FullName(full_name).value
         ##self.__name = self.validate_name_surname(full_name)
-        self.__visitor_type = self.validate_access_type(visitor_type, validity)
+
+        self.__visitor_type = AccessType(visitor_type).value
+        ##self.__visitor_type = self.validate_access_type(visitor_type, validity)
 
         self.__email_address = Email(email_address).value
         ##self.__email_address = self.check_email_syntax(email_address)
-        self.__validity = self.validate_days_and_type(validity, visitor_type)
+        self.__validity = Days(validity, visitor_type).value
         # justnow = datetime.utcnow()
         # self.__time_stamp = datetime.timestamp(justnow)
         # only for testing , fix de time stamp to this value 1614962381.90867 , 5/3/2020 18_40
@@ -47,9 +51,11 @@ class AccessRequest:
     #        else:
     #            raise AccessManagementException("DNI is not valid")
 
+    """
     @staticmethod
     def check_email_syntax(email_address):
-        """ checks the email's syntax"""
+        """#checks the email's syntax
+    """
         regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
@@ -71,13 +77,14 @@ class AccessRequest:
 
     @staticmethod
     def validate_days_and_type(days, user_type):
-        """validating the validity days"""
+        """#validating the validity days
+    """"
         if not isinstance(days, int):
             raise AccessManagementException("days invalid")
         if (user_type == "Guest" and days in range(2, 16)) or \
                 (user_type == "Resident" and days == 0):
             return days
-        raise AccessManagementException("days invalid")
+        raise AccessManagementException("days invalid")"""
 
     @property
     def name(self):

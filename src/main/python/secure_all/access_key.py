@@ -8,6 +8,7 @@ from .access_manager_config import JSON_FILES_PATH
 from .access_management_exception import AccessManagementException
 from .access_request import AccessRequest
 from .data.attribute_dni import Dni
+from .data.attribute_access_code import AccessCode
 
 class AccessKey():
     """Class representing the key for accessing the building"""
@@ -24,7 +25,7 @@ class AccessKey():
         # check if the values are correct
         # self.check_access_code(request["AccessCode"])
         self.__dni = Dni(request["DNI"]).value
-        self.__access_code = self.check_access_code(request["AccessCode"])
+        self.__access_code = AccessCode(request["AccessCode"]).value
 
         # self.validate_dni(request["DNI"])#está en validate_access_code_for_dni
         # self.validate_email_list(request)
@@ -86,9 +87,11 @@ class AccessKey():
             raise AccessManagementException("JSON Decode Error - Wrong label")
         return True
 
+    """
     @staticmethod
     def check_access_code(access_code):
-        """Validating the access code syntax"""
+        """#Validating the access code syntax
+    """
         regex_access_code = '[0-9a-f]{32}'
         if re.fullmatch(regex_access_code, access_code):
             return access_code
@@ -96,7 +99,8 @@ class AccessKey():
 
     @staticmethod
     def validate_dni(dni):
-        """RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE"""
+        """#RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE
+    """
         regex_dni = r'^[0-9]{8}[A-Z]{1}$'
         if not re.fullmatch(regex_dni, dni):
             raise AccessManagementException("DNI is not valid")
@@ -110,6 +114,8 @@ class AccessKey():
         if dni[8] == valid_chars_dni[index_letra]:
             return dni
         raise AccessManagementException("DNI is not valid")
+    """
+
     """ en el init
     def validate_access_code_for_dni(self, request):
         """ #validates access code for dni
@@ -149,9 +155,11 @@ class AccessKey():
                 return element
         return None
 
+
     @staticmethod
     def check_email_syntax(email_address):
-        """ checks the email's syntax"""
+        """checks the email's syntax
+    """
         regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
