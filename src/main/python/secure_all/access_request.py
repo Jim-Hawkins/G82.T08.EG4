@@ -9,6 +9,7 @@ from .data.attribute_dni import Dni
 from .data.attribute_email import Email
 from .data.attribute_access_type import AccessType
 from .data.attribute_days import Days
+from .storage.request_json_store import RequestJsonStore
 
 
 class AccessRequest:
@@ -133,10 +134,11 @@ class AccessRequest:
     def access_code(self):
         """Property for obtaining the access code according the requirements"""
         return hashlib.md5(self.__str__().encode()).hexdigest()
-
+    """
     @staticmethod
     def read_credentials():
-        """Returns the list of AccessRequests from the store"""
+        """ #Returns the list of AccessRequests from the store
+    """
         f = JSON_FILES_PATH + "storeRequest.json"
         try:
             with open(f, "r", encoding="utf-8", newline="") as file:
@@ -146,9 +148,11 @@ class AccessRequest:
         except json.JSONDecodeError as ex:
             raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
         return data
-
+    """
+    """
     def add_credentials(self):
-        """Save the access requests in hte store"""
+        """#Save the access requests in hte store
+    """
         myFile = JSON_FILES_PATH + "storeRequest.json"
         try:
             # if file is not exist store the first item
@@ -165,3 +169,8 @@ class AccessRequest:
             l.append(self.__dict__)
             with open(myFile, "w", encoding="utf-8", newline="") as file:
                 json.dump(l, file, indent=2)
+    """
+    def store_request(self):
+        request_store = RequestJsonStore()
+        request_store.add_item(self)
+        del request_store

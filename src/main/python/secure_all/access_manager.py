@@ -90,7 +90,7 @@ class AccessManager:
         """ this method give access to the building"""
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
-            my_request.add_credentials()
+            my_request.store_request()
             return my_request.access_code
         raise AccessManagementException("DNI is not valid")
     """ en access_key

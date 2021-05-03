@@ -9,6 +9,7 @@ class JsonStore:
 
     def __init__(self):
         self.data_list = []
+        self.load_store()
 
     def load_store(self):
 
