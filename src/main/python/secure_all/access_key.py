@@ -11,6 +11,8 @@ from .data.attribute_dni import Dni
 from .data.attribute_access_code import AccessCode
 from .data.attribute_email_list import EmailList
 from .storage.keys_json_store import KeysJsonStore
+from .storage.request_json_store import RequestJsonStore
+
 
 class AccessKey():
     """Class representing the key for accessing the building"""
@@ -33,8 +35,11 @@ class AccessKey():
         # self.validate_email_list(request)
         self.__notification_emails = EmailList(request["NotificationMail"]).value
 
+        request_store = RequestJsonStore()
+        access_request = request_store.find_access_code(self.__access_code, self.__dni)
         # user_info = self.validate_access_code_for_dni(request)
         # antiguo método validate_access_code_for_dni
+        """
         user_info = self.find_credentials(request["DNI"])
         if user_info is None:
             raise AccessManagementException("DNI is not found in the store")
@@ -47,6 +52,7 @@ class AccessKey():
         user_access_code = user_request.access_code
         if user_access_code != request["AccessCode"]:
             raise AccessManagementException("access code is not correct for this DNI")
+        """
         ##################
 
         # self.__dni = dni
@@ -56,7 +62,7 @@ class AccessKey():
         self.__issued_at = datetime.timestamp(justnow)
         # fix self.__issued_at only for testing 13-3-2021 18_49
         self.__issued_at = 1615627129.580297
-        validity = user_info['_AccessRequest__validity']
+        validity = access_request.validity
         if validity == 0:
             self.__expiration_date = 0
         else:
@@ -139,10 +145,11 @@ class AccessKey():
             raise AccessManagementException("access code is not correct for this DNI")
         return user_info
     """
-
+    """
     @staticmethod
     def find_credentials(credential):
-        """ return the access request related to a given dni"""
+        """ #return the access request related to a given dni
+    """
 
 
         path_to_request = JSON_FILES_PATH + "storeRequest.json"
@@ -158,7 +165,7 @@ class AccessKey():
             if element["_AccessRequest__id_document"] == credential:
                 return element
         return None
-
+    """
     """
     @staticmethod
     def check_email_syntax(email_address):

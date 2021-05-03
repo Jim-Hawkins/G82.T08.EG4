@@ -131,6 +131,11 @@ class AccessRequest:
         return self.__time_stamp
 
     @property
+    def validity(self):
+        """Read-only property that returns the validity"""
+        return self.__validity
+
+    @property
     def access_code(self):
         """Property for obtaining the access code according the requirements"""
         return hashlib.md5(self.__str__().encode()).hexdigest()
