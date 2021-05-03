@@ -4,7 +4,7 @@ import hashlib
 import re
 from .access_manager_config import JSON_FILES_PATH
 from .access_management_exception import AccessManagementException
-
+from .data.attribute_full_name import FullName
 
 class AccessRequest:
     """Class representing the access request"""
@@ -12,7 +12,9 @@ class AccessRequest:
     def __init__(self, id_document, full_name, visitor_type, email_address, validity):
         #self.__id_document = self.validate_dni(id_document)
         self.__id_document = id_document
-        self.__name = self.validate_name_surname(full_name)
+
+        self.__name = FullName(full_name).value
+        ##self.__name = self.validate_name_surname(full_name)
         self.__visitor_type = self.validate_access_type(visitor_type, validity)
         self.__email_address = self.check_email_syntax(email_address)
         self.__validity = self.validate_days_and_type(validity, visitor_type)
