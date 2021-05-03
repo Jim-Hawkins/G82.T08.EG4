@@ -5,3 +5,4 @@ from .attribute_email import Email
 from .attribute_access_type import AccessType
 from .attribute_days import Days
 from .attribute_access_code import AccessCode
+from .attribute_key import Key

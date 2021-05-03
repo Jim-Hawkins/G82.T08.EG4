@@ -7,6 +7,8 @@ from .access_management_exception import AccessManagementException
 from .access_key import AccessKey
 from .access_request import AccessRequest
 from .access_manager_config import JSON_FILES_PATH
+from .data.attribute_key import Key
+from .storage.keys_json_store import KeysJsonStore
 
 
 class AccessManager:
@@ -52,11 +54,12 @@ class AccessManager:
             raise AccessManagementException("JSON Decode Error - Wrong label")
         return True
     """
-
+    """
     ### está en access_key también
     @staticmethod
     def read_key_file(infile):
-        """read the list of stored elements"""
+        """#read the list of stored elements
+    """
         try:
             with open(infile, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
@@ -66,7 +69,7 @@ class AccessManager:
             raise AccessManagementException("JSON Decode Error - Wrong JSON Format")\
                 from json_decode_exception
         return data
-
+    """
     """ en access_key
     @staticmethod
     def find_credentials(credential):
@@ -86,8 +89,10 @@ class AccessManager:
                 return element
         return None
     """
+
     def request_access_code (self, id_card, name_surname, access_type, email_address, days):
-        """ this method give access to the building"""
+        """ #this method give access to the building
+    """
         if self.validate_dni(id_card):
             my_request = AccessRequest(id_card, name_surname, access_type, email_address, days)
             my_request.store_request()
@@ -161,9 +166,15 @@ class AccessManager:
 
     def open_door(self, key):
         """check if key is complain with the  correct format"""
+        #Key(key)
+        keys_store = KeysJsonStore()
+        return keys_store.is_valid(key)
+    """
         regex_key = r'[0-9a-f]{64}'
         if not re.fullmatch(regex_key, key):
             raise AccessManagementException("key invalid")
+    """
+    """
         path_to_store_keys = JSON_FILES_PATH + "storeKeys.json"
         key_file = self.read_key_file(path_to_store_keys)
         justnow = datetime.utcnow()
@@ -174,3 +185,4 @@ class AccessManager:
                          or campo["_AccessKey__expiration_date"] == 0):
                 return True
         raise AccessManagementException("key is not found or is expired")
+    """
