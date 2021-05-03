@@ -10,6 +10,7 @@ from .access_request import AccessRequest
 from .data.attribute_dni import Dni
 from .data.attribute_access_code import AccessCode
 from .data.attribute_email_list import EmailList
+from .storage.keys_json_store import KeysJsonStore
 
 class AccessKey():
     """Class representing the key for accessing the building"""
@@ -142,6 +143,8 @@ class AccessKey():
     @staticmethod
     def find_credentials(credential):
         """ return the access request related to a given dni"""
+
+
         path_to_request = JSON_FILES_PATH + "storeRequest.json"
         try:
             with open(path_to_request, "r", encoding="utf-8", newline="") as file:
@@ -238,6 +241,11 @@ class AccessKey():
 
     def store_keys(self):
         """ srote de keys """
+        key_store = KeysJsonStore()
+        key_store.add_item(self)
+        key_store.save_store()
+
+    """
         my_file = JSON_FILES_PATH + "storeKeys.json"
         try:
             with open(my_file, "r", encoding="utf-8", newline="") as file:
@@ -254,3 +262,4 @@ class AccessKey():
                 json.dump(data_key, file, indent=2)
         except json.JSONDecodeError as ex:
             raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
+    """
