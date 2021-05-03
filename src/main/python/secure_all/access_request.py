@@ -6,18 +6,22 @@ from .access_manager_config import JSON_FILES_PATH
 from .access_management_exception import AccessManagementException
 from .data.attribute_full_name import FullName
 from .data.attribute_dni import Dni
+from .data.attribute_email import Email
+
 
 class AccessRequest:
     """Class representing the access request"""
 
     def __init__(self, id_document, full_name, visitor_type, email_address, validity):
-        #self.__id_document = self.validate_dni(id_document)
+        # self.__id_document = self.validate_dni(id_document)
         self.__id_document = Dni(id_document).value
 
         self.__name = FullName(full_name).value
         ##self.__name = self.validate_name_surname(full_name)
         self.__visitor_type = self.validate_access_type(visitor_type, validity)
-        self.__email_address = self.check_email_syntax(email_address)
+
+        self.__email_address = Email(email_address).value
+        ##self.__email_address = self.check_email_syntax(email_address)
         self.__validity = self.validate_days_and_type(validity, visitor_type)
         # justnow = datetime.utcnow()
         # self.__time_stamp = datetime.timestamp(justnow)
@@ -27,21 +31,21 @@ class AccessRequest:
     def __str__(self):
         return "AccessRequest:" + json.dumps(self.__dict__)
 
-#    def validate_dni(self, dni):
-#        """RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE"""
-#        regex_dni = r'^[0-9]{8}[A-Z]{1}$'
-#        if not re.fullmatch(regex_dni, dni):
-#            raise AccessManagementException("DNI is not valid")
-#        valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
-#                           "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
-#                           "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
-#                           "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
-#        dni_number = int(dni[0:8])
-#        index_letra = str(dni_number % 23)
-#        if dni[8] == valid_chars_dni[index_letra]:
-#            return dni
-#        else:
-#            raise AccessManagementException("DNI is not valid")
+    #    def validate_dni(self, dni):
+    #        """RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE"""
+    #        regex_dni = r'^[0-9]{8}[A-Z]{1}$'
+    #        if not re.fullmatch(regex_dni, dni):
+    #            raise AccessManagementException("DNI is not valid")
+    #        valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
+    #                           "6": "Y", "7": "F", "8": "P", "9": "D", "10": "X", "11": "B",
+    #                           "12": "N", "13": "J", "14": "Z", "15": "S", "16": "Q", "17": "V",
+    #                           "18": "H", "19": "L", "20": "C", "21": "K", "22": "E"}
+    #        dni_number = int(dni[0:8])
+    #        index_letra = str(dni_number % 23)
+    #        if dni[8] == valid_chars_dni[index_letra]:
+    #            return dni
+    #        else:
+    #            raise AccessManagementException("DNI is not valid")
 
     @staticmethod
     def check_email_syntax(email_address):
@@ -50,7 +54,6 @@ class AccessRequest:
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
         return email_address
-
 
     def validate_name_surname(self, name_surname):
         # this regex is very useful if you are, for example, Felipe 6 (eye! Not Felipe VI)
