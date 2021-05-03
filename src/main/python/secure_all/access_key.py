@@ -7,7 +7,7 @@ import re
 from .access_manager_config import JSON_FILES_PATH
 from .access_management_exception import AccessManagementException
 from .access_request import AccessRequest
-
+from .data.attribute_dni import Dni
 
 class AccessKey():
     """Class representing the key for accessing the building"""
@@ -23,7 +23,7 @@ class AccessKey():
         self.validate_key_labels(request)
         # check if the values are correct
         # self.check_access_code(request["AccessCode"])
-        self.__dni = self.validate_dni(request["DNI"])
+        self.__dni = Dni(request["DNI"]).value
         self.__access_code = self.check_access_code(request["AccessCode"])
 
         # self.validate_dni(request["DNI"])#está en validate_access_code_for_dni
