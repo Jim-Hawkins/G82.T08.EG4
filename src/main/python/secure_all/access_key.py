@@ -9,6 +9,7 @@ from .access_management_exception import AccessManagementException
 from .access_request import AccessRequest
 from .data.attribute_dni import Dni
 from .data.attribute_access_code import AccessCode
+from .data.attribute_email_list import EmailList
 
 class AccessKey():
     """Class representing the key for accessing the building"""
@@ -29,7 +30,7 @@ class AccessKey():
 
         # self.validate_dni(request["DNI"])#está en validate_access_code_for_dni
         # self.validate_email_list(request)
-        self.__notification_emails = self.validate_email_list(request["NotificationMail"])
+        self.__notification_emails = EmailList(request["NotificationMail"]).value
 
         # user_info = self.validate_access_code_for_dni(request)
         # antiguo método validate_access_code_for_dni
@@ -155,17 +156,18 @@ class AccessKey():
                 return element
         return None
 
-
+    """
     @staticmethod
     def check_email_syntax(email_address):
-        """checks the email's syntax
+        """#checks the email's syntax
     """
         regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
 
     def validate_email_list(self, lista):
-        """validates email list"""
+        """#validates email list
+    """
         num_emails = 0
         for email in lista:
             num_emails = num_emails + 1
@@ -173,9 +175,10 @@ class AccessKey():
         if num_emails < 1 or num_emails > 5:
             raise AccessManagementException("JSON Decode Error - Email list invalid")
         return lista
+    """
 
     def __signature_string(self):
-        """Composes the string to be used for generating the key"""
+        """#Composes the string to be used for generating the key"""
         return "{alg:" + self.__alg + ",typ:" + self.__type + ",accesscode:" \
                + self.__access_code + ",issuedate:" + str(self.__issued_at) \
                + ",expirationdate:" + str(self.__expiration_date) + "}"
