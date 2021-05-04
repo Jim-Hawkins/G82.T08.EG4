@@ -12,6 +12,7 @@ from .data.attribute_access_code import AccessCode
 from .data.attribute_email_list import EmailList
 from .storage.keys_json_store import KeysJsonStore
 from .storage.request_json_store import RequestJsonStore
+from .Parser.key_json_parser import KeyJsonParser
 
 
 class AccessKey():
@@ -19,13 +20,15 @@ class AccessKey():
 
     # def __init__(self, dni, access_code, notification_emails, validity):
     def __init__(self, keyfile):
+
+        request = KeyJsonParser(keyfile).json_content
         self.__alg = "SHA-256"
         self.__type = "DS"
         ##################
         # de get_access_key (access_manager)
-        request = self.read_key_file(keyfile)
+        # request = self.read_key_file(keyfile)
         # check if all labels are correct
-        self.validate_key_labels(request)
+        # self.validate_key_labels(request)
         # check if the values are correct
         # self.check_access_code(request["AccessCode"])
         self.__dni = Dni(request["DNI"]).value
@@ -71,9 +74,11 @@ class AccessKey():
             self.__expiration_date = self.__issued_at + (validity * 30 * 24 * 60 * 60)
         self.__key = hashlib.sha256(self.__signature_string().encode()).hexdigest()
 
+    """
     @staticmethod
     def read_key_file(infile):
-        """read the list of stored elements"""
+        """ #read the list of stored elements
+    """
         try:
             with open(infile, "r", encoding="utf-8", newline="") as file:
                 data = json.load(file)
@@ -86,12 +91,15 @@ class AccessKey():
 
     @staticmethod
     def validate_key_labels(file_content):
-        """checking the labels of the input json file"""
+        """#checking the labels of the input json file
+    """
         key_list = ["AccessCode", "DNI", "NotificationMail"]
         for key in key_list:
             if not key in file_content:
                 raise AccessManagementException("JSON Decode Error - Wrong label")
         return True
+    """
+
     """
         if not "AccessCode" in label_list.keys():
             raise AccessManagementException("JSON Decode Error - Wrong label")
@@ -104,7 +112,7 @@ class AccessKey():
     """
     @staticmethod
     def check_access_code(access_code):
-        """#Validating the access code syntax
+        """  # Validating the access code syntax
     """
         regex_access_code = '[0-9a-f]{32}'
         if re.fullmatch(regex_access_code, access_code):
@@ -113,7 +121,7 @@ class AccessKey():
 
     @staticmethod
     def validate_dni(dni):
-        """#RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE
+        """  # RETURN DNI IF IT IS RIGHT, OR AN EXCEPTION IN OTHER CASE
     """
         regex_dni = r'^[0-9]{8}[A-Z]{1}$'
         if not re.fullmatch(regex_dni, dni):
@@ -132,7 +140,7 @@ class AccessKey():
 
     """ en el init
     def validate_access_code_for_dni(self, request):
-        """ #validates access code for dni
+        """  # validates access code for dni
     """
         if not self.validate_dni(request["DNI"]):
             raise AccessManagementException("DNI is not valid")
@@ -154,7 +162,7 @@ class AccessKey():
     """
     @staticmethod
     def find_credentials(credential):
-        """ #return the access request related to a given dni
+        """  # return the access request related to a given dni
     """
 
 
@@ -175,14 +183,14 @@ class AccessKey():
     """
     @staticmethod
     def check_email_syntax(email_address):
-        """#checks the email's syntax
+        """  # checks the email's syntax
     """
         regex_email = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'
         if not re.fullmatch(regex_email, email_address):
             raise AccessManagementException("Email invalid")
 
     def validate_email_list(self, lista):
-        """#validates email list
+        """  # validates email list
     """
         num_emails = 0
         for email in lista:
