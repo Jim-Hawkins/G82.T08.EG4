@@ -1,7 +1,10 @@
+""" Module of the son Class AccessCode of Attribute """
+
 from .attribute import Attribute
 
 
 class AccessCode(Attribute):
+    """ son Class of Attribute """
 
     def __init__(self, attr_value):
         self._validation_pattern = '[0-9a-f]{32}'

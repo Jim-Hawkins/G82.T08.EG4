@@ -1,10 +1,12 @@
+""" Father Class Attribute"""
+
 import re
 from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class Attribute:
-    """Class Attribute for representing a generic attribute"""
-    """Default value"""
+    """ Class Attribute for representing a generic attribute """
+    # Default value
     _attr_value = ""
     """regex validation pattern"""
     _validation_pattern = r""
@@ -12,6 +14,7 @@ class Attribute:
     _error_message = ""
 
     def _validate(self, attr_value):
+        """ Father method of validate """
         if not isinstance(attr_value, str):
             raise AccessManagementException(self._error_message)
         if not re.fullmatch(self._validation_pattern, attr_value):
@@ -20,6 +23,7 @@ class Attribute:
 
     @property
     def value(self):
+        """ Method to obtain the value """
         return self._attr_value
 
     @value.setter

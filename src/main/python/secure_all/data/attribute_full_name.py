@@ -1,7 +1,10 @@
+""" Module of the son Class FullName of Attribute """
+
 from .attribute import Attribute
 
 
 class FullName(Attribute):
+    """ son Class of Attribute """
 
     def __init__(self, attr_value):
         self._validation_pattern = r'^[A-Za-z0-9]+(\s[A-Za-z0-9]+)+'

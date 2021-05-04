@@ -1,9 +1,12 @@
+""" Module of the son Class EmailList of Attribute """
+
+from secure_all.exceptions.access_management_exception import AccessManagementException
 from .attribute import Attribute
 from .attribute_email import Email
-from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class EmailList(Attribute):
+    """ son Class of Attribute """
 
     _EMAIL_LIST_INVALID = "JSON Decode Error - Email list invalid"
 

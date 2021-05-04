@@ -1,8 +1,12 @@
-from .json_store import JsonStore
+""" Class to request the Json """
+
 from secure_all.configurations.access_manager_config import JSON_FILES_PATH
 from secure_all.exceptions.access_management_exception import AccessManagementException
+from .json_store import JsonStore
+
 
 class RequestJsonStore(JsonStore):
+    """ Class to request the Json """
     _FILE_PATH = JSON_FILES_PATH + "storeRequest.json"
     _ID_FIELD = "_AccessRequest__id_document"
     _LABEL_ID_DOCUMENT = '_AccessRequest__id_document'
@@ -16,16 +20,18 @@ class RequestJsonStore(JsonStore):
     _INVALID_ITEM = "Invalid item"
 
     def add_item(self, item):
+        """ Method to add the item into the json"""
 
         from secure_all.data.access_request import AccessRequest
 
         if not isinstance(item, AccessRequest):
             raise AccessManagementException(self._INVALID_ITEM)
-        if self.find_item(item.id_document):   # si sale un item (!= None), lanza excepción
+        if self.find_item(item.id_document):  # si sale un item (!= None), lanza excepción
             raise AccessManagementException(self._ID_DOCUMENT_ALREADY_IN)
         return super().add_item(item)
 
     def find_access_code(self, access_code, dni):
+        """ Method to find the data with access_code and dni"""
         request_stored = self.find_item(dni)
         if request_stored is None:
             raise AccessManagementException(self._ID_DOCUMENT_NOT_FOUND)
@@ -33,12 +39,11 @@ class RequestJsonStore(JsonStore):
         # generate the access code to check if it is correct
         from secure_all.data.access_request import AccessRequest
         request_stored_obj = AccessRequest(
-                                     request_stored[self._LABEL_ID_DOCUMENT],
-                                     request_stored[self._LABEL_NAME],
-                                     request_stored[self._LABEL_VISITOR_TYPE],
-                                     request_stored[self._LABEL_EMAIL],
-                                     request_stored[self._LABEL_VALIDITY])
+            request_stored[self._LABEL_ID_DOCUMENT],
+            request_stored[self._LABEL_NAME],
+            request_stored[self._LABEL_VISITOR_TYPE],
+            request_stored[self._LABEL_EMAIL],
+            request_stored[self._LABEL_VALIDITY])
         if request_stored_obj.access_code == access_code:
             return request_stored_obj
-        else:
-            raise AccessManagementException(self._ACCESS_CODE_WRONG)
+        raise AccessManagementException(self._ACCESS_CODE_WRONG)

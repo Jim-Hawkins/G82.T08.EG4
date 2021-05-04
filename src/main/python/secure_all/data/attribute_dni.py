@@ -1,8 +1,11 @@
-from .attribute import Attribute
+""" Module of the son Class Dni of Attribute """
+
 from secure_all.exceptions.access_management_exception import AccessManagementException
+from .attribute import Attribute
 
 
 class Dni(Attribute):
+    """ son Class of Attribute """
 
     _ID_DOCUMENT_INVALID = "DNI is not valid"
 
@@ -13,6 +16,7 @@ class Dni(Attribute):
         self._attr_value = self._validate(attr_value)
 
     def _validate(self, attr_value):
+        """ Son Method of validate"""
 
         dni = super()._validate(attr_value)
         valid_chars_dni = {"0": "T", "1": "R", "2": "W", "3": "A", "4": "G", "5": "M",
@@ -23,5 +27,4 @@ class Dni(Attribute):
         index_letra = str(dni_number % 23)
         if dni[8] == valid_chars_dni[index_letra]:
             return dni
-        else:
-            raise AccessManagementException(self._error_message)
+        raise AccessManagementException(self._error_message)

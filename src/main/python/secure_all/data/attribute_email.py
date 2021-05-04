@@ -1,7 +1,10 @@
+""" Module of the son Class Email of Attribute """
+
 from .attribute import Attribute
 
 
 class Email(Attribute):
+    """ son Class of Attribute """
 
     def __init__(self, attr_value):
         self._validation_pattern = r'^[a-z0-9]+[\._]?[a-z0-9]+[@](\w+[.])+\w{2,3}$'

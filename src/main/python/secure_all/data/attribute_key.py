@@ -1,7 +1,10 @@
+""" Module of the son Class Key of Attribute """
+
 from .attribute import Attribute
 
 
 class Key(Attribute):
+    """ son Class of Attribute """
 
     def __init__(self, attr_value):
         self._validation_pattern = r'[0-9a-f]{64}'

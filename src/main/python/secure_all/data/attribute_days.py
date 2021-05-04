@@ -1,8 +1,11 @@
-from .attribute import Attribute
+""" Module of the son Class Days of Attribute """
+
 from secure_all.exceptions.access_management_exception import AccessManagementException
+from .attribute import Attribute
 
 
 class Days(Attribute):
+    """ son Class of Attribute """
 
     _DAYS_INVALID = "days invalid"
 

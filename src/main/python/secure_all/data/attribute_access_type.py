@@ -1,7 +1,10 @@
+""" Module of the son Class AccessType of Attribute """
+
 from .attribute import Attribute
 
 
 class AccessType(Attribute):
+    """ son Class of Attribute """
 
     def __init__(self, attr_value):
         self._validation_pattern = r'(Resident|Guest)'
