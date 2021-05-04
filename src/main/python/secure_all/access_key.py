@@ -85,8 +85,14 @@ class AccessKey():
         return data
 
     @staticmethod
-    def validate_key_labels(label_list):
+    def validate_key_labels(file_content):
         """checking the labels of the input json file"""
+        key_list = ["AccessCode", "DNI", "NotificationMail"]
+        for key in key_list:
+            if not key in file_content:
+                raise AccessManagementException("JSON Decode Error - Wrong label")
+        return True
+    """
         if not "AccessCode" in label_list.keys():
             raise AccessManagementException("JSON Decode Error - Wrong label")
         if not "DNI" in label_list.keys():
@@ -94,7 +100,7 @@ class AccessKey():
         if not "NotificationMail" in label_list.keys():
             raise AccessManagementException("JSON Decode Error - Wrong label")
         return True
-
+    """
     """
     @staticmethod
     def check_access_code(access_code):
