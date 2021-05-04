@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from .json_store import JsonStore
-from secure_all.access_manager_config import JSON_FILES_PATH
-from secure_all.access_management_exception import AccessManagementException
+from secure_all.configurations.access_manager_config import JSON_FILES_PATH
+from secure_all.exceptions.access_management_exception import AccessManagementException
 from secure_all.data.attribute_key import Key
 
 class KeysJsonStore(JsonStore):
@@ -10,6 +10,13 @@ class KeysJsonStore(JsonStore):
     _ID_FIELD = "_AccessKey__key"
     _KEY_ERROR = "key is not found or is expired"
     _EXPIRATION_DATE_LABEL = "_AccessKey__expiration_date"
+    _INVALID_ITEM = "Invalid item"
+
+    def add_item(self, item):
+        from secure_all.data.access_key import AccessKey
+        if not isinstance(item, AccessKey):
+            raise AccessManagementException(self._INVALID_ITEM)
+        return super().add_item(item)
 
     def is_valid(self, key_to_validate):
         Key(key_to_validate)

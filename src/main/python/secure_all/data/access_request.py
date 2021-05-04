@@ -1,15 +1,12 @@
 """MODULE: access_request. Contains the access request class"""
 import json
 import hashlib
-import re
-from .access_manager_config import JSON_FILES_PATH
-from .access_management_exception import AccessManagementException
-from .data.attribute_full_name import FullName
-from .data.attribute_dni import Dni
-from .data.attribute_email import Email
-from .data.attribute_access_type import AccessType
-from .data.attribute_days import Days
-from .storage.request_json_store import RequestJsonStore
+from secure_all.data.attribute_full_name import FullName
+from secure_all.data.attribute_dni import Dni
+from secure_all.data.attribute_email import Email
+from secure_all.data.attribute_access_type import AccessType
+from secure_all.data.attribute_days import Days
+from secure_all.storage.request_json_store import RequestJsonStore
 
 
 class AccessRequest:

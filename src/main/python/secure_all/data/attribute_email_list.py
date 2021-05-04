@@ -1,6 +1,6 @@
 from .attribute import Attribute
 from .attribute_email import Email
-from secure_all.access_management_exception import AccessManagementException
+from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class EmailList(Attribute):

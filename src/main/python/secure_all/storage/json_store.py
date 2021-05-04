@@ -1,6 +1,5 @@
 import json
-from secure_all.access_management_exception import AccessManagementException
-from secure_all.access_manager_config import JSON_FILES_PATH
+from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class JsonStore:

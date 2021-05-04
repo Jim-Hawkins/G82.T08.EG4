@@ -1,9 +1,9 @@
 """Module """
 import re
 
-from .access_management_exception import AccessManagementException
+from secure_all.exceptions.access_management_exception import AccessManagementException
 from secure_all.data.access_key import AccessKey
-from .access_request import AccessRequest
+from secure_all.data.access_request import AccessRequest
 from .storage.keys_json_store import KeysJsonStore
 
 

@@ -1,5 +1,5 @@
 from .attribute import Attribute
-from ..access_management_exception import AccessManagementException
+from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class Dni(Attribute):

@@ -1,5 +1,5 @@
 import re
-from ..access_management_exception import AccessManagementException
+from secure_all.exceptions.access_management_exception import AccessManagementException
 
 
 class Attribute:

@@ -1,12 +1,7 @@
 """Contains the class Access Key"""
 from datetime import datetime
 import hashlib
-import json
-import re
 
-from secure_all.access_manager_config import JSON_FILES_PATH
-from secure_all.access_management_exception import AccessManagementException
-from secure_all.access_request import AccessRequest
 from secure_all.data.attribute_dni import Dni
 from secure_all.data.attribute_access_code import AccessCode
 from secure_all.data.attribute_email_list import EmailList
