@@ -4,15 +4,15 @@ import hashlib
 import json
 import re
 
-from .access_manager_config import JSON_FILES_PATH
-from .access_management_exception import AccessManagementException
-from .access_request import AccessRequest
-from .data.attribute_dni import Dni
-from .data.attribute_access_code import AccessCode
-from .data.attribute_email_list import EmailList
-from .storage.keys_json_store import KeysJsonStore
-from .storage.request_json_store import RequestJsonStore
-from .Parser.key_json_parser import KeyJsonParser
+from secure_all.access_manager_config import JSON_FILES_PATH
+from secure_all.access_management_exception import AccessManagementException
+from secure_all.access_request import AccessRequest
+from secure_all.data.attribute_dni import Dni
+from secure_all.data.attribute_access_code import AccessCode
+from secure_all.data.attribute_email_list import EmailList
+from secure_all.storage.keys_json_store import KeysJsonStore
+from secure_all.storage.request_json_store import RequestJsonStore
+from secure_all.Parser.key_json_parser import KeyJsonParser
 
 
 class AccessKey():

@@ -6,6 +6,8 @@ from secure_all.access_manager_config import JSON_FILES_PATH
 class JsonStore:
     _FILE_PATH = ""
     _ID_FIELD = ""
+    _WRONG_JSON = "JSON Decode Error - Wrong JSON Format"
+    _WRONG_FILE_OR_PATH = "Wrong file or file path"
 
     def __init__(self):
         self.data_list = []
@@ -19,7 +21,7 @@ class JsonStore:
         except FileNotFoundError as ex:
             self.data_list = []
         except json.JSONDecodeError as ex:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
+            raise AccessManagementException(self._WRONG_JSON) from ex
         return self.data_list
 
     def save_store(self):
@@ -27,7 +29,7 @@ class JsonStore:
             with open(self._FILE_PATH, "w", encoding="utf-8", newline="") as file:
                 json.dump(self.data_list, file, indent=2)
         except FileNotFoundError as ex:
-            raise AccessManagementException("Wrong file or file path") from ex
+            raise AccessManagementException(self._WRONG_FILE_OR_PATH) from ex
 
     def add_item(self, item):
         self.load_store()

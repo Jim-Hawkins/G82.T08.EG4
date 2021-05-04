@@ -4,10 +4,12 @@ from ..access_management_exception import AccessManagementException
 
 class Dni(Attribute):
 
+    _ID_DOCUMENT_INVALID = "DNI is not valid"
+
     def __init__(self, attr_value):
 
         self._validation_pattern = r'^[0-9]{8}[A-Z]{1}$'
-        self._error_message = "DNI is not valid"
+        self._error_message = self._ID_DOCUMENT_INVALID
         self._attr_value = self._validate(attr_value)
 
     def _validate(self, attr_value):
@@ -22,4 +24,4 @@ class Dni(Attribute):
         if dni[8] == valid_chars_dni[index_letra]:
             return dni
         else:
-            raise AccessManagementException("DNI is not valid")
+            raise AccessManagementException(self._error_message)

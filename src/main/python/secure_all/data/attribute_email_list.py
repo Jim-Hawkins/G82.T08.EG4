@@ -5,6 +5,8 @@ from secure_all.access_management_exception import AccessManagementException
 
 class EmailList(Attribute):
 
+    _EMAIL_LIST_INVALID = "JSON Decode Error - Email list invalid"
+
     def __init__(self, attr_value):
         self._error_message = "days invalid"
         self._attr_value = self._validate(attr_value)
@@ -16,5 +18,5 @@ class EmailList(Attribute):
             num_emails = num_emails + 1
             email = Email(email).value
         if num_emails < 1 or num_emails > 5:
-            raise AccessManagementException("JSON Decode Error - Email list invalid")
+            raise AccessManagementException(self._EMAIL_LIST_INVALID)
         return lista

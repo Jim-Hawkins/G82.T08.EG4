@@ -1,13 +1,9 @@
 """Module """
 import re
-import json
-from datetime import datetime
 
 from .access_management_exception import AccessManagementException
-from .access_key import AccessKey
+from secure_all.data.access_key import AccessKey
 from .access_request import AccessRequest
-from .access_manager_config import JSON_FILES_PATH
-from .data.attribute_key import Key
 from .storage.keys_json_store import KeysJsonStore
 
 
@@ -90,7 +86,7 @@ class AccessManager:
         return None
     """
 
-    def request_access_code (self, id_card, name_surname, access_type, email_address, days):
+    def request_access_code(self, id_card, name_surname, access_type, email_address, days):
         """ #this method give access to the building
     """
         if self.validate_dni(id_card):
