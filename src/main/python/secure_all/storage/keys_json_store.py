@@ -18,10 +18,9 @@ class KeysJsonStore(JsonStore):
     _EXPIRATION_DATE_LABEL = "_AccessKey__expiration_date"
     _INVALID_ITEM = "Invalid item"
 
-    def add_item(self, item):
+    def add_item(self, item, tipo=None):
         """ Method to add the item into the data """
-        from secure_all.data.access_key import AccessKey
-        if not isinstance(item, AccessKey):
+        if not isinstance(item, tipo):
             raise AccessManagementException(self._INVALID_ITEM)
         return super().add_item(item)
 

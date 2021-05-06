@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test_access_manager_tests.TestAccessManager-20210506200011" tests="1" file="test_access_manager_tests.py" time="0.002" timestamp="2021-05-06T20:00:11" failures="0" errors="0" skipped="0">
+	<testcase classname="test_access_manager_tests.TestAccessManager" name="test_singleton_access_manager" time="0.002" timestamp="2021-05-06T20:00:11"/>
+</testsuite>

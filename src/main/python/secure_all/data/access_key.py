@@ -15,8 +15,6 @@ from secure_all.Parser.key_json_parser import KeyJsonParser
 
 class AccessKey:
     """Class representing the key for accessing the building"""
-
-    # def __init__(self, dni, access_code, notification_emails, validity):
     def __init__(self, keyfile):
 
         request = KeyJsonParser(keyfile).json_content
@@ -101,5 +99,5 @@ class AccessKey:
     def store_keys(self):
         """ srote de keys """
         key_store = KeysJsonStore()
-        key_store.add_item(self)
+        key_store.add_item(self, AccessKey)
         key_store.save_store()

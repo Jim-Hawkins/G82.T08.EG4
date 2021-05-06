@@ -1,5 +1,7 @@
 """ Module to store the json files"""
 
+# pylint: disable=unused-argument
+
 import json
 from secure_all.exceptions.access_management_exception import AccessManagementException
 
@@ -35,7 +37,7 @@ class JsonStore:
         except FileNotFoundError as ex:
             raise AccessManagementException(self._WRONG_FILE_OR_PATH) from ex
 
-    def add_item(self, item):
+    def add_item(self, item, tipo=None):
         """ Method to add an item into the json"""
         self.load_store()
         self.data_list.append(item.__dict__)
