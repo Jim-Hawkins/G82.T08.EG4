@@ -1,4 +1,8 @@
 """MODULE: access_request. Contains the access request class"""
+
+# pylint: disable=too-many-arguments
+# pylint: disable=relative-beyond-top-level
+
 import json
 import hashlib
 from secure_all.data.attribute_full_name import FullName
@@ -84,6 +88,7 @@ class AccessRequest:
         return hashlib.md5(self.__str__().encode()).hexdigest()
 
     def store_request(self):
+        """method to store a request json"""
         request_store = RequestJsonStore()
         request_store.add_item(self)
         del request_store

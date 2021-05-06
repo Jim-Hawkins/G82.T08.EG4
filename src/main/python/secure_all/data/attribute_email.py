@@ -1,5 +1,8 @@
 """ Module of the son Class Email of Attribute """
 
+# pylint: disable=too-few-public-methods
+# pylint: disable=relative-beyond-top-level
+
 from .attribute import Attribute
 
 

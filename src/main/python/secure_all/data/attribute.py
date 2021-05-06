@@ -1,5 +1,8 @@
 """ Father Class Attribute"""
 
+# pylint: disable=too-few-public-methods
+# pylint: disable=relative-beyond-top-level
+
 import re
 from secure_all.exceptions.access_management_exception import AccessManagementException
 

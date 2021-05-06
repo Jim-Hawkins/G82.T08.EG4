@@ -1,5 +1,8 @@
 """ Module for the son Class KeyJsonStore """
 
+# pylint: disable=import-outside-toplevel
+# pylint: disable=relative-beyond-top-level
+
 from datetime import datetime
 from secure_all.configurations.access_manager_config import JSON_FILES_PATH
 from secure_all.exceptions.access_management_exception import AccessManagementException

@@ -1,11 +1,17 @@
 """Module """
 
+# pylint: disable=invalid-name
+# pylint: disable=too-many-arguments
+# pylint: disable=relative-beyond-top-level
+# pylint: disable=no-self-use
+
 from secure_all.data.access_key import AccessKey
 from secure_all.data.access_request import AccessRequest
 from .storage.keys_json_store import KeysJsonStore
 
 
 class AccessManager:
+    """Class for providing the methods for managing the access to a building"""
     class __AccessManager:
         """Class for providing the methods for managing the access to a building"""
 

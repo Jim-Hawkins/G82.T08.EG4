@@ -1,5 +1,8 @@
 """ Class to request the Json """
 
+# pylint: disable=import-outside-toplevel
+# pylint: disable=relative-beyond-top-level
+
 from secure_all.configurations.access_manager_config import JSON_FILES_PATH
 from secure_all.exceptions.access_management_exception import AccessManagementException
 from .json_store import JsonStore

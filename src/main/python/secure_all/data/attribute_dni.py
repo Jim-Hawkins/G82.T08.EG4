@@ -1,5 +1,8 @@
 """ Module of the son Class Dni of Attribute """
 
+# pylint: disable=too-few-public-methods
+# pylint: disable=relative-beyond-top-level
+
 from secure_all.exceptions.access_management_exception import AccessManagementException
 from .attribute import Attribute
 

@@ -1,4 +1,7 @@
 """Contains the class Access Key"""
+
+# pylint: disable=too-many-instance-attributes
+
 from datetime import datetime
 import hashlib
 
@@ -10,7 +13,7 @@ from secure_all.storage.request_json_store import RequestJsonStore
 from secure_all.Parser.key_json_parser import KeyJsonParser
 
 
-class AccessKey():
+class AccessKey:
     """Class representing the key for accessing the building"""
 
     # def __init__(self, dni, access_code, notification_emails, validity):
@@ -95,32 +98,8 @@ class AccessKey():
     def key(self, value):
         self.__key = value
 
-    #    @property
-    #    def key(self):
-    #        """Returns the sha256 signature"""
-    #        return hashlib.sha256(self.__signature_string().encode()).hexdigest()
-
     def store_keys(self):
         """ srote de keys """
         key_store = KeysJsonStore()
         key_store.add_item(self)
         key_store.save_store()
-
-    """
-        my_file = JSON_FILES_PATH + "storeKeys.json"
-        try:
-            with open(my_file, "r", encoding="utf-8", newline="") as file:
-                list_keys = json.load(file)
-            # append the new key
-            list_keys.append(self.__dict__)
-            # write all the keys in the file
-            with open(my_file, "w", encoding="utf-8", newline="") as file:
-                json.dump(list_keys, file, indent=2)
-        except FileNotFoundError as ex:
-            # if file is not found, store the first key
-            with open(my_file, "x", encoding="utf-8", newline="") as file:
-                data_key = [self.__dict__]
-                json.dump(data_key, file, indent=2)
-        except json.JSONDecodeError as ex:
-            raise AccessManagementException("JSON Decode Error - Wrong JSON Format") from ex
-    """
